@@ -1,4 +1,4 @@
-Just an engine to create random Sudoku game
+Just an engine to build random Sudoku game
 
 Write :
 
@@ -9,7 +9,7 @@ console.log('\n');
 Sudoku.render(Sudoku.showRandomCells(cells, 30));
 ```
 
-and you will got something like this :
+and you will get something like this :
 
 ```
 3 6 5 9 1 7 4 8 2 
@@ -33,4 +33,4 @@ and you will got something like this :
 2 * * * * * * 3 1 
 ```
 
-The number 30 means, that the engine show only 30 cells randomly.
+The number 30 means the engine shows only 30 cells randomly.
