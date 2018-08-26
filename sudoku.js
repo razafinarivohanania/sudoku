@@ -180,8 +180,3 @@ var Sudoku = {
         console.log(content);
     }
 }
-
-var cells = Sudoku.buildCells();
-Sudoku.render(cells);
-console.log('\n');
-Sudoku.render(Sudoku.showRandomCells(cells, 30));
