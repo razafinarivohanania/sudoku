@@ -40,6 +40,66 @@ var Utils = {
 }
 
 var Sudoku = {
+    Position: {
+        LEFT: 0,
+        RIGHT: 1,
+        UP: 2,
+        DOWN: 3
+    },
+    Border: {
+        getBorder: function (x, y) {
+            return {
+                left: this.hasBorderLeft(x, y),
+                right: this.hasBorderRight(x, y),
+                top: this.hasBorderTop(x, y),
+                bottom: this.hasBorderBottom(x, y)
+            }
+        },
+        hasBorderLeft: function (x, y) {
+            return y == 0 || y == 3 || y == 6;
+        },
+        hasBorderRight: function (x, y) {
+            return y == 8;
+        },
+        hasBorderTop: function (x, y) {
+            return x == 0 || x == 3 || x == 6;
+        },
+        hasBorderBottom: function (x, y) {
+            return x == 8;
+        }
+    },
+    getNeighbour: function (x, y, position) {
+        switch (position) {
+            case this.Position.LEFT:
+                if (y == 0)
+                    y = 8;
+                else
+                    y--;
+                break;
+            case this.Position.RIGHT:
+                if (y == 8)
+                    y = 0;
+                else
+                    y++;
+                break;
+            case this.Position.UP:
+                if (x == 0)
+                    x = 8;
+                else
+                    x--;
+                break;
+            case this.Position.DOWN:
+                if (x == 8)
+                    x = 0;
+                else
+                    x++;
+        }
+
+        return {
+            x: x,
+            y: y
+        };
+    },
     buildCells: function () {
         var cells = Utils.Array.create2DArray(9, 9, null);
         var maxRetry = 362880;
