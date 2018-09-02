@@ -32,7 +32,7 @@ Vue.component('component-cell', {
         forceInputValueToDigit: function (key) {
             if (key.indexOf('Arrow') >= 0 && /^\d$/.test(this.inputValue))
                 return;
-        
+
             this.inputValue = /^\d$/.test(key) && key != 0 ?
                 key :
                 '';
@@ -54,17 +54,38 @@ Vue.component('component-cell', {
             }
 
             if (position == null)
-            return;
+                return;
 
             var coordinate = this.idToCoordinate();
-            var idNeighBour = this.coordinateToId(Sudoku.getNeighbour(coordinate.x, coordinate.y, position));
-            var neighBourInput = document.querySelector('[id="' + idNeighBour + '"]>input');
-            neighBourInput.focus();
+            var offSetX = 0;
+            var offSetY = 0;
+            for (var i = 0; i < 9; i++) {
+                var x = coordinate.x + offSetX;
+                var y = coordinate.y + offSetY;
+
+                var neighBourCoordinate = Sudoku.getNeighbour(x, y, position);
+                var idNeighBour = this.coordinateToId(neighBourCoordinate);
+                var neighBourInput = document.querySelector('[id="' + idNeighBour + '"]>input');
+
+                if (!neighBourInput.disabled) {
+                    neighBourInput.focus();
+                    return;
+                }
+
+                if (neighBourCoordinate.x - x > 0)
+                    offSetX++;
+                else if (neighBourCoordinate.x - x < 0)
+                    offSetX--;
+                else if (neighBourCoordinate.y - y > 0)
+                    offSetY++;
+                else if (neighBourCoordinate.y - y < 0)
+                    offSetY--;
+            }
         },
         idToCoordinate: function () {
             return {
-                x: this.id.charAt(0),
-                y: this.id.charAt(1)
+                x: +this.id.charAt(0),
+                y: +this.id.charAt(1)
             }
         },
         coordinateToId: function (coordinate) {
@@ -97,5 +118,29 @@ Vue.component('component-block', {
 })
 
 new Vue({
-    el: '#sudoku'
-});;
+    el: '#sudoku',
+    mounted: function () {
+        setTimeout(function () {
+            this.buildNewGame();
+        }.bind(this), 0);
+    },
+    methods: {
+        buildNewGame: function () {
+            var cells = Sudoku.buildCells();
+            cells = Sudoku.showRandomCells(cells, 15);
+
+            for (var i = 0; i < 9; i++) {
+                for (var j = 0; j < 9; j++) {
+                    var cell = cells[i][j];
+
+                    if (cell == null)
+                        cell = '';
+
+                    var inputElement = document.querySelector('[id="' + i + j + '"]>input')
+                    inputElement.value = cell;
+                    inputElement.disabled = cell != '';
+                }
+            }
+        }
+    }
+});

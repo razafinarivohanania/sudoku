@@ -102,18 +102,22 @@ var Sudoku = {
     },
     buildCells: function () {
         var cells = Utils.Array.create2DArray(9, 9, null);
-        var maxRetry = 362880;
+        var maxRetry = 1000;
 
-        for (var row = 0; row < 9; row++) {
-            for (var i = 0; i < maxRetry; i++) {
-                if (this.buildRow(cells, row))
-                    break;
-
-                if (i == maxRetry - 1)
-                    throw new Error('Max retry reached!');
+        try {
+            for (var row = 0; row < 9; row++) {
+                for (var i = 0; i < maxRetry; i++) {
+                    if (this.buildRow(cells, row))
+                        break;
+    
+                    if (i == maxRetry - 1)
+                        throw new Error('Max retry reached!');
+                }
             }
+        } catch (error){
+            return this.buildCells();
         }
-
+        
         return cells;
     },
     buildRow: function (cells, row) {
@@ -195,6 +199,9 @@ var Sudoku = {
         }
 
         return false;
+    },
+    buildEmptyCells : function(){
+        return Utils.Array.create2DArray(9, 9, '');
     },
     showRandomCells: function (cells, count) {
         var showCells = Utils.Array.create2DArray(9, 9, null);
